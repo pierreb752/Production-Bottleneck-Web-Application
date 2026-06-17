@@ -4,112 +4,261 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Window and Door Production Floor Bottleneck Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --blue-50: #eef4ff;
+      --blue-100: #dbe7ff;
+      --blue-500: #2f6fed;
+      --blue-600: #2356c9;
+      --blue-700: #1c439e;
+      --blue-900: #102a63;
+      --red-500: #e5484d;
+      --red-600: #c93a3e;
+      --gray-50: #f8fafc;
+      --gray-200: #e6e9ef;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #161b22;
+      --shadow-sm: 0 1px 2px rgba(16, 42, 99, 0.06);
+      --shadow-md: 0 8px 24px rgba(16, 42, 99, 0.10);
+      --shadow-lg: 0 16px 40px rgba(16, 42, 99, 0.16);
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #ffffff;
-      color: #1a1a1a;
-      font-family: 'Segoe UI', Arial, sans-serif;
+      background:
+        radial-gradient(circle at 15% 0%, var(--blue-50) 0%, #ffffff 45%),
+        radial-gradient(circle at 100% 30%, #fdf2f2 0%, #ffffff 40%),
+        #ffffff;
+      color: var(--gray-900);
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 32px 16px 48px;
+      padding: 48px 20px 64px;
     }
 
     header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
+      max-width: 700px;
+      animation: fadeInDown 0.5s ease both;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--blue-100);
+      color: var(--blue-700);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue-500);
+      box-shadow: 0 0 0 3px var(--blue-100);
     }
 
     header h1 {
-      font-size: 24px;
-      color: #0d3b8c;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, var(--blue-900), var(--blue-600));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     header p {
-      font-size: 14px;
-      color: #555;
-      margin-top: 6px;
+      font-size: 15px;
+      color: var(--gray-500);
+      margin-top: 10px;
+      font-weight: 500;
     }
 
     #button-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 16px;
       width: 100%;
-      max-width: 900px;
-    }
-
-    .op-button {
-      background: #1565c0;
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      padding: 18px 16px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s ease, transform 0.1s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-
-    .op-button:hover {
-      background: #0d47a1;
-      transform: translateY(-1px);
-    }
-
-    .op-button.top-button {
-      background: #c62828;
-      grid-column: 1 / -1;
-    }
-
-    .op-button.top-button:hover {
-      background: #8e0000;
-    }
-
-    #detail-panel {
-      display: none;
-      width: 100%;
-      max-width: 900px;
-      margin-top: 8px;
-    }
-
-    #detail-panel.visible {
-      display: block;
+      max-width: 920px;
     }
 
     #button-grid.hidden {
       display: none;
     }
 
-    .back-button {
-      background: #eeeeee;
-      color: #1a1a1a;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 8px 16px;
-      font-size: 14px;
+    .op-button {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      background: linear-gradient(155deg, var(--blue-500), var(--blue-600));
+      color: #ffffff;
+      border: none;
+      border-radius: 14px;
+      padding: 20px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .op-button .badge {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .op-button .label small {
+      display: block;
+      font-weight: 500;
+      font-size: 12px;
+      opacity: 0.85;
+      margin-bottom: 2px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .op-button::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(155deg, rgba(255,255,255,0.16), rgba(255,255,255,0));
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .op-button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .op-button:hover::after {
+      opacity: 1;
+    }
+
+    .op-button:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .op-button.top-button {
+      background: linear-gradient(155deg, var(--red-500), var(--red-600));
+      grid-column: 1 / -1;
+      justify-content: center;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .op-button.top-button .badge {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    #detail-panel {
+      display: none;
+      width: 100%;
+      max-width: 920px;
+      margin-top: 4px;
+    }
+
+    #detail-panel.visible {
+      display: block;
+      animation: fadeIn 0.35s ease both;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 22px;
+      transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
     }
 
     .back-button:hover {
-      background: #ddd;
+      background: var(--gray-50);
+      border-color: var(--blue-500);
+      color: var(--blue-700);
+      transform: translateX(-2px);
     }
 
     .detail-card {
-      background: #f5f8ff;
-      border: 1px solid #c9dafc;
-      border-radius: 10px;
-      padding: 24px;
+      background: #ffffff;
+      border: 1px solid var(--gray-200);
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      animation: fadeInUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
     .detail-card h2 {
-      color: #0d3b8c;
-      margin-bottom: 16px;
-      font-size: 20px;
+      color: var(--blue-900);
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-card h2::before {
+      content: '';
+      width: 8px;
+      height: 22px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--blue-500), var(--blue-700));
+      display: inline-block;
     }
 
     .detail-card ul {
@@ -118,58 +267,87 @@
 
     .detail-card li {
       position: relative;
-      padding-left: 22px;
-      margin-bottom: 14px;
-      line-height: 1.6;
-      color: #2a2a2a;
+      padding: 14px 16px 14px 38px;
+      margin-bottom: 10px;
+      line-height: 1.65;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      border-radius: 10px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeInUp 0.4s ease forwards;
     }
 
     .detail-card li::before {
-      content: '•';
+      content: '\2022';
       position: absolute;
-      left: 4px;
-      color: #1565c0;
+      left: 14px;
+      top: 14px;
+      color: var(--blue-500);
       font-weight: bold;
+      font-size: 18px;
     }
 
     .top-item {
-      border-bottom: 1px solid #c9dafc;
-      padding-bottom: 14px;
-      margin-bottom: 14px;
+      border-bottom: 1px solid var(--gray-200);
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeInUp 0.4s ease forwards;
     }
 
     .top-item:last-child {
       border-bottom: none;
       margin-bottom: 0;
+      padding-bottom: 0;
     }
 
     .top-item .rank-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
       font-weight: 700;
-      color: #0d3b8c;
-      margin-bottom: 4px;
+      color: var(--blue-900);
+      margin-bottom: 8px;
+      font-size: 15px;
     }
 
     .top-item .delay-tag {
       display: inline-block;
-      background: #c62828;
+      background: linear-gradient(135deg, var(--red-500), var(--red-600));
       color: #fff;
       font-size: 12px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-left: 8px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .top-item div:last-child {
+      color: var(--gray-700);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 26px; }
+      .detail-card { padding: 22px; }
     }
   </style>
 </head>
 <body>
 
 <header>
+  <span class="eyebrow"><span class="dot"></span>Production Floor Insights</span>
   <h1>Window and Door Production Floor</h1>
   <p>Select an operation to view its bottleneck reasons</p>
 </header>
 
 <div id="button-grid">
-  <button class="op-button top-button" id="top-bottlenecks-btn">Top Bottlenecks</button>
+  <button class="op-button top-button" id="top-bottlenecks-btn">
+    <span class="badge">&#9650;</span>
+    <span class="label">Top Bottlenecks</span>
+  </button>
 </div>
 
 <div id="detail-panel">
@@ -184,10 +362,19 @@
   const backBtn = document.getElementById('back-btn');
   const topBtn = document.getElementById('top-bottlenecks-btn');
 
+  function staggerChildren(selector, container) {
+    container.querySelectorAll(selector).forEach((el, i) => {
+      el.style.animationDelay = `${i * 60}ms`;
+    });
+  }
+
   function showDetail(html) {
     detailContent.innerHTML = html;
     buttonGrid.classList.add('hidden');
+    detailPanel.classList.remove('visible');
+    void detailPanel.offsetWidth;
     detailPanel.classList.add('visible');
+    staggerChildren('li, .top-item', detailContent);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -199,10 +386,14 @@
   async function loadOperations() {
     const res = await fetch('/api/operations');
     const operations = await res.json();
-    operations.forEach(op => {
+    operations.forEach((op, i) => {
       const btn = document.createElement('button');
       btn.className = 'op-button';
-      btn.textContent = `Operation #${op.id}: ${op.name}`;
+      btn.style.animationDelay = `${(i + 1) * 60}ms`;
+      btn.innerHTML = `
+        <span class="badge">${op.id}</span>
+        <span class="label"><small>Operation #${op.id}</small>${op.name}</span>
+      `;
       btn.addEventListener('click', () => loadOperationDetail(op.id));
       buttonGrid.appendChild(btn);
     });
