@@ -1,5 +1,4 @@
-from flask import Flask, request, jsonify, render_template
-import re
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -71,84 +70,30 @@ TOP_BOTTLENECKS = [
     }
 ]
 
-KEYWORDS = {
-    1: ["cutting", "cut"],
-    2: ["assembly", "grinding", "grind", "weld", "welding", "assembly and grinding"],
-    3: ["straightening", "straighten"],
-    4: ["painting", "paint", "booth"],
-    5: ["glazing", "glaze", "glass", "vacuum", "lifter"],
-    6: ["lock and prep", "lock", "prep", "traveler"]
-}
-
-def find_operation(query):
-    query_lower = query.lower()
-
-    match = re.search(r'operation\s*#?\s*([1-6])', query_lower)
-    if match:
-        return int(match.group(1))
-
-    # Multi-word keywords first (longest match wins)
-    for op_num in KEYWORDS:
-        for kw in sorted(KEYWORDS[op_num], key=len, reverse=True):
-            if kw in query_lower:
-                return op_num
-
-    # Bare number fallback
-    match = re.search(r'\b([1-6])\b', query_lower)
-    if match:
-        return int(match.group(1))
-
-    return None
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/query', methods=['POST'])
-def query():
-    data = request.get_json()
-    user_input = data.get('message', '').strip()
 
-    if not user_input:
-        return jsonify({'response': 'Please enter a command.'})
+@app.route('/api/operations')
+def list_operations():
+    operations = [{"id": op_id, "name": op["name"]} for op_id, op in BOTTLENECKS.items()]
+    return jsonify(operations)
 
-    lower = user_input.lower()
 
-    if any(phrase in lower for phrase in ['top bottleneck', 'top 4', 'worst bottleneck', 'biggest bottleneck']):
-        lines = ['TOP BOTTLENECKS — Ranked by Production Time Impact and Frequency', '']
-        for item in TOP_BOTTLENECKS:
-            lines.append(f'  #{item["rank"]}  [{item["delay"]}]  {item["operation"]}')
-            lines.append(f'      {item["description"]}')
-            lines.append('')
-        return jsonify({'response': '\n'.join(lines).rstrip()})
+@app.route('/api/operations/<int:op_id>')
+def get_operation(op_id):
+    op = BOTTLENECKS.get(op_id)
+    if not op:
+        return jsonify({"error": "Operation not found"}), 404
+    return jsonify({"id": op_id, "name": op["name"], "bullets": op["bullets"]})
 
-    if any(word in lower for word in ['help', 'list', 'operations', '--help', '-h']):
-        lines = ['Available operations:', '']
-        for k, v in BOTTLENECKS.items():
-            lines.append(f'  Operation #{k}: {v["name"]}')
-        lines += ['', 'Commands:',
-                  '  "top bottlenecks"  — show the 4 biggest production time impacts',
-                  '  "help" / "list"    — show this menu',
-                  '  "clear"            — reset terminal',
-                  '',
-                  'Usage: ask about any operation by name or number.',
-                  'Example: "bottlenecks for operation 3" or "painting"']
-        return jsonify({'response': '\n'.join(lines)})
 
-    if lower in ('clear', 'cls'):
-        return jsonify({'response': '__CLEAR__'})
+@app.route('/api/top-bottlenecks')
+def top_bottlenecks():
+    return jsonify(TOP_BOTTLENECKS)
 
-    op_num = find_operation(user_input)
-
-    if op_num:
-        op = BOTTLENECKS[op_num]
-        bullets = '\n'.join([f'  • {b}' for b in op['bullets']])
-        response = f'Operation #{op_num}: {op["name"]}\n\n{bullets}'
-        return jsonify({'response': response})
-
-    return jsonify({
-        'response': 'Operation not recognized.\nType "help" or "list" to see all available operations.'
-    })
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
