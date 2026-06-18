@@ -580,7 +580,7 @@
     const items = await res.json();
     const html = items.map(item => `
       <div class="top-item">
-        <div class="rank-line">#${item.rank} ${item.operation}<span class="delay-tag">${item.delay}</span></div>
+        <div class="rank-line">${item.rank}. ${item.operation}<span class="delay-tag">${item.delay}</span></div>
         <div>${item.description}</div>
       </div>
     `).join('');
